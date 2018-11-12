@@ -124,6 +124,8 @@ if (!isset ($_SESSION['teacher'])) {
 
     
 
+    
+
 
  
     $truecolor = imagecreatetruecolor($newwidth, $newheight);

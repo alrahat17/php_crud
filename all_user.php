@@ -24,39 +24,9 @@ else{
 	$page =$_GET['page'];
 }
 $first_result=($page-1)* $results_per_page;
+echo "$first_result";
 $paginated_sql="SELECT * FROM tbl_test ORDER BY user_id DESC LIMIT ". $first_result . ',' . $results_per_page;
 $paginated_result = $conn->query($paginated_sql);
-
-
-$output = '';
-
-if(isset($_POST['search'])) {
-  	//return alert('button pressed');
-	$search = $_POST['search'];
-	$search = preg_replace("#[^0-9a-z]i#","", $search);
-
-	$search_query = mysqli_query($conn,"SELECT * FROM tbl_test WHERE user_name LIKE '$search' ") or die ("Could not search");
-    //$search_result = $conn->query($search_query);
-	$search_count=mysqli_num_rows($search_query);
-
-
-	if($search_count == 0){
-		$output = "There was no search results!";
-
-	}else{
-
-
-		while ($row = mysqli_fetch_assoc($search_query)) {
-
-			$user_name = $row ['user_name'];
-			$user_email = $row ['user_email'];
-			$output .='<div>Name: '.$user_name.'<br>Email:'.$user_email.'</div>';
-
-		}
-
-	}
-}
-
 
 
 
@@ -66,10 +36,13 @@ if(isset($_POST['search'])) {
 <html lang="en">
 <head>
 	<title>allstudent</title>
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 </head>
 <body>
 
@@ -85,19 +58,20 @@ if(isset($_POST['search'])) {
 				<input type="button" class="btn btn-lg btn-warning" onclick="location.href='logout.php';" value="Log Out" />
 				
 				<h3>All Students</h3>
-				<form action ="all_user.php" method = "post">
+				<form action ="user_search.php" method = "post">
 
-					<input name="search" id="search" type="text" size="30" placeholder="Search"/>
+					<input name="search" id="search" type="text" size="30" placeholder="Type Name Here..."  />
 
 					<input type="submit" value="Search"/>
 
 				</form> 
+			   
 
-				<?php print ("$output");?>
-
-				
-				
 			</center>
+
+
+			
+			
 			
 			<table class="table">
 				<thead>
@@ -118,6 +92,8 @@ if(isset($_POST['search'])) {
 
 				<tbody>
 
+
+
 					<?php
 
 
@@ -137,7 +113,7 @@ if(isset($_POST['search'])) {
 							<td><?php echo $row['user_course'];?></td>
 
 							<td><a  href="images/<?php echo $row['user_photo'];?>">
-  							<img src="thumbnails/<?php echo $row['user_photo'];?>" alt="Forest" style="width:150px">
+								<img src="thumbnails/<?php echo $row['user_photo'];?>" alt="Forest" style="width:150px">
 							</a></td>
 
 							
@@ -192,3 +168,8 @@ if(isset($_POST['search'])) {
 
 	</body>
 	</html>
+	
+
+
+
+
