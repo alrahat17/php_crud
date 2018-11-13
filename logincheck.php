@@ -7,7 +7,6 @@
 	
 }
 
-
  	include_once "dbconfig.php";
 
  	if(isset($_POST['submit']))

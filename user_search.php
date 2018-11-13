@@ -3,36 +3,22 @@
 include_once "dbconfig.php";
 error_reporting( ~E_NOTICE ); // avoid notice
 session_start();
+$search_key = $_SESSION['search_p'];
+
+
 if (!isset ($_SESSION['teacher'])) {
 	header('Location:login.php');
 	exit();
   	# code...
 }
-// if (!isset ($_SESSION["search_p"])) {
-// 	unset($_SESSION["search_p"]);
-//   	$_SESSION["search_p"]='';
-// 	header('Location:all_user.php');
-// 	exit();
-//   	# code...
-// }
 
 
-if(isset($_POST['search'])){
-$search = $_POST['search'];
 
-$_SESSION['search_p']=$search;
-
-//$search = preg_replace("#[^0-9a-z]i#","", $search);
-echo "$_SESSION['search_p']";
-
-$search_query = mysqli_query($conn,"SELECT * FROM tbl_test WHERE user_name LIKE '$search%' ");
-
+if(!empty($_SESSION['search_p'])){
+$search_query = mysqli_query($conn,"SELECT * FROM tbl_test WHERE user_name LIKE '$search_key%' ");
 $search_count=mysqli_num_rows($search_query);
-echo "$search_count";
 $search_results_per_page = 2;
 $number_of_search_pages = ceil($search_count/$search_results_per_page);
-
-
 
 
 if (!isset($_GET['search_page'])) {
@@ -41,13 +27,13 @@ if (!isset($_GET['search_page'])) {
 else{
 	$search_page =$_GET['search_page'];
 }
-$first_search_result=($search_page-1)* $Search_results_per_page;
-echo "$first_result";
-$paginated="SELECT * FROM tbl_test WHERE user_name LIKE '$search%' LIMIT ". $first_search_result . ',' . $search_results_per_page;
+$first_search_result=($search_page-1)* $search_results_per_page;
+$paginated="SELECT * FROM tbl_test WHERE user_name LIKE '$search_key%' LIMIT ". $first_search_result . ',' . $search_results_per_page;
 $paginated_search_result = $conn->query($paginated);
 
-
 }
+
+
 
 
 
@@ -72,6 +58,7 @@ $paginated_search_result = $conn->query($paginated);
 		<center>
 			<h3>Welcome</3>
 				<p><?php echo $_SESSION['teacher']; ?></p>
+				<h4>Search completed for: <?php echo $_SESSION['search_p'];?></h4>
 				<h4>Total Result Found: <?php echo $search_count  ?></h4>
 				<input type="button" class="btn btn-lg btn-success" onclick="location.href='all_user.php';" value="All User" />
 				<input type="button" class="btn btn-lg btn-primary" onclick="location.href='reg.php';" value="Add new" />
@@ -155,7 +142,7 @@ $paginated_search_result = $conn->query($paginated);
 			</tbody>
 		</table>
 	</div>
-
+	
 
 	<?php 
 

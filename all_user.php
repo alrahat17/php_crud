@@ -3,11 +3,27 @@
 include_once "dbconfig.php";
 error_reporting( ~E_NOTICE ); // avoid notice
 session_start();
+
 if (!isset ($_SESSION['teacher'])) {
 	header('Location:login.php');
 	exit();
   	# code...
 }
+
+if (isset($_POST['search'])) {
+	$search_key=$_POST['search'];
+	echo "$search_key";
+	$_SESSION['search_p'] = $search_key;
+	echo $_SESSION['search_p'];
+	
+	header('Location:user_search.php');
+	//wasted much for missing this Location word
+	//If we use form action this block will not work
+
+}
+
+
+
 
 
 $sql="SELECT * FROM tbl_test  ORDER BY user_id DESC";
@@ -24,7 +40,6 @@ else{
 	$page =$_GET['page'];
 }
 $first_result=($page-1)* $results_per_page;
-echo "$first_result";
 $paginated_sql="SELECT * FROM tbl_test ORDER BY user_id DESC LIMIT ". $first_result . ',' . $results_per_page;
 $paginated_result = $conn->query($paginated_sql);
 
@@ -46,9 +61,6 @@ $paginated_result = $conn->query($paginated_sql);
 </head>
 <body>
 
-
-
-
 	<div class="container">
 		<center>
 			<h3>Welcome</3>
@@ -58,9 +70,9 @@ $paginated_result = $conn->query($paginated_sql);
 				<input type="button" class="btn btn-lg btn-warning" onclick="location.href='logout.php';" value="Log Out" />
 				
 				<h3>All Students</h3>
-				<form action ="user_search.php" method = "post">
+				<form action ="" method ="post">
 
-					<input name="search" id="search" type="text" size="30" placeholder="Type Name Here..."  />
+					<input name="search" id="search" type="text" size="30" placeholder="Type Name Here..."  required="" />
 
 					<input type="submit" value="Search"/>
 
